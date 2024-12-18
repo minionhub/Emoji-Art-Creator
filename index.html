@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emoji Art Creator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f0f8ff;
+    }
+    h1 {
+      color: #333;
+    }
+    #canvas {
+      border: 2px solid #000;
+      width: 80%;
+      height: 400px;
+      background: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .emoji {
+      position: absolute;
+      font-size: 2rem;
+      cursor: move;
+    }
+    #emoji-selector {
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>Emoji Art Creator</h1>
+  <div id="emoji-selector">
+    <button onclick="addEmoji('😀')">😀</button>
+    <button onclick="addEmoji('🌟')">🌟</button>
+    <button onclick="addEmoji('❤️')">❤️</button>
+    <button onclick="addEmoji('🎉')">🎉</button>
+    <button onclick="addEmoji('🐶')">🐶</button>
+  </div>
+  <div id="canvas"></div>
+
+  <script>
+    function addEmoji(emoji) {
+      const canvas = document.getElementById('canvas');
+      const emojiElement = document.createElement('div');
+      emojiElement.classList.add('emoji');
+      emojiElement.innerText = emoji;
+
+      // Random initial position
+      emojiElement.style.left = `${Math.random() * (canvas.offsetWidth - 50)}px`;
+      emojiElement.style.top = `${Math.random() * (canvas.offsetHeight - 50)}px`;
+
+      // Make draggable
+      emojiElement.onmousedown = function(event) {
+        const shiftX = event.clientX - emojiElement.getBoundingClientRect().left;
+        const shiftY = event.clientY - emojiElement.getBoundingClientRect().top;
+
+        function moveAt(pageX, pageY) {
+          emojiElement.style.left = pageX - shiftX + 'px';
+          emojiElement.style.top = pageY - shiftY + 'px';
+        }
+
+        function onMouseMove(event) {
+          moveAt(event.pageX, event.pageY);
+        }
+
+        document.addEventListener('mousemove', onMouseMove);
+
+        emojiElement.onmouseup = function() {
+          document.removeEventListener('mousemove', onMouseMove);
+          emojiElement.onmouseup = null;
+        };
+      };
+
+      emojiElement.ondragstart = function() {
+        return false;
+      };
+
+      canvas.appendChild(emojiElement);
+    }
+  </script>
+</body>
+</html>
